@@ -1,41 +1,45 @@
 #include <iostream>
 using namespace std;
 
-class TreeNode
+template<class X> class TreeNode
 {
   public:
     TreeNode();
-    TreeNode(int k);
+    TreeNode(X k);
     virtual ~TreeNode();
 
     int key;
-    TreeNode *left;
-    TreeNode *right;
+    TreeNode<X> *left;
+    TreeNode<X> *right;
 
     void printTree();
 }
 ;
 //////////////////////////////////////////////////////////////
-TreeNode::TreeNode()
+template <class X>
+TreeNode<X>::TreeNode()
 {
   key = 0;
   left = NULL;
   right = NULL;
 }
 
-TreeNode::TreeNode(int k)
+template <class X>
+TreeNode<X>::TreeNode(X k)
 {
   key = k;
   left = NULL;
   right = NULL;
 }
 
-TreeNode::~TreeNode()
+template <class X>
+TreeNode<X>::~TreeNode()
 {
 
 }
 
-void TreeNode::printTree()
+template <class X>
+void TreeNode<X>::printTree()
 {
   if (left != NULL)
   {
