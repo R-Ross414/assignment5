@@ -1,4 +1,4 @@
-#include "Database.h"
+/*#include "Database.h"
 #include <iostream>
 using namespace std;
 
@@ -23,3 +23,4 @@ void Database::addStudent(Student* student)
 {
 
 }
+*/

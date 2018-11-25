@@ -1,20 +1,20 @@
 #include <iostream>
-//#include "People.h"
 #include "Database.h"
-//#include "BST.h"
 #include <string>
 
 using namespace std;
 
 int main()
 {
-  //BST<int>* studentss = new BST<int>();
-  //studentss->insert(1);
-  //studentss->insert(2);
-  //studentss->insert(3);
+  BST<int>* bst = new BST<int>();
+  bst->insert(3);
+  Database* database = new Database();
+  database->addStudent(new Student(8, "name", "level", "major", 2.2, 6));
+  database->addStudent(new Student(10, "name1", "level1", "major1", 3.4, 22));
+  database->printStudents();
+  database->displayStudent(8);
 
-  //cout << studentss->search(3) << endl;
-  Database* data = new Database();
-  //Student* student = new Student(int ID, string name, string level, string major, double GPA, int advisor):Person(ID, name, level)
-  //Faculty* faculty = new Faculty(4, "name", "level", "dept", new BST<int>());
+  database->addFaculty(new Faculty(44, "name", "level1", "dept", bst));
+  database->addFaculty(new Faculty(22, "name", "level", "dept", bst));
+  database->printFaculty();
 }

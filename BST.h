@@ -18,12 +18,27 @@ template<class X> class BST
     void deleteAll(TreeNode<X>* node); //#1
     void insert(X value); //#2
     bool contains(X value); //#3
+    bool containsPtr(X value);
     TreeNode<X>* getSuccessor(TreeNode<X> *d); //#4
     bool deleteRec(X k); //#5
     bool isEmpty(); //#6
 
     void printTree();
     void recPrint(X *node); //in-order traversal
+
+    //remove ptr op (see delete rec) -- MAYBE?
+    X search(X value);
+    X searchPtr(X value);
+    void printPtrTree();
+
+    friend ostream& operator<<(ostream& os, BST<X>& output)
+    {
+      if (output.root != NULL)
+      {
+        os << *(output.root);
+      }
+      return os;
+    };
 
   private:
     TreeNode<X> *root;
@@ -119,6 +134,38 @@ bool BST<X>::contains(X value)
         return false;
       }
       if (value < *(current->key))
+      {
+        current = current->left;
+      }
+      else
+      {
+        current = current->right;
+      }
+    }
+  }
+  return true;
+}
+
+///////////////////////////////////////////////////////////////
+template<class X>
+bool BST<X>::containsPtr(X value)
+{
+  if(isEmpty())
+  {
+    return false;
+  }
+
+  else //not an empty tree, continue the search
+  {
+    TreeNode<X> *current = root;
+
+    while(**(current->key) != *value)
+    {
+      if (current == NULL)
+      {
+        return false;
+      }
+      if (*value < **(current->key))
       {
         current = current->left;
       }
@@ -275,3 +322,66 @@ void BST<X>::recPrint(X *node)
   recPrint(node->right);
   cout << node << endl;
 }
+///////////////////////////
+template<class X>
+X BST<X>::search(X value)
+{
+    TreeNode<X> *current = root;
+
+    while(*(current->key) != value)
+    {
+      if (current == NULL)
+      {
+        break;
+      }
+      if (value < *(current->key))
+      {
+        current = current->left;
+      }
+      else
+      {
+        current = current->right;
+      }
+    }
+    return *(current->key);
+}
+
+///////////////////////////
+template<class X>
+X BST<X>::searchPtr(X value)
+{
+  TreeNode<X> *current = root;
+
+  while(**(current->key) != *value)
+  {
+    if (current == NULL)
+    {
+      break;
+    }
+    if (*value < **(current->key))
+    {
+      current = current->left;
+    }
+    else
+    {
+      current = current->right;
+    }
+  }
+  return *(current->key);
+}
+
+///////////////////////////
+template<class X>
+void BST<X>::printPtrTree()
+{
+  root->printPtrTree();
+}
+
+///////////////////////////
+/*
+template<class X>
+ostream& operator<<(ostream& os, BST<X>& output)
+{
+  os << *(output.root);
+  return os;
+}*/

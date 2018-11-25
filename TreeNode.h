@@ -13,6 +13,26 @@ template<class X> class TreeNode
     TreeNode<X> *right; //RIGHT NODE
 
     void printTree(); //SELF EXPLANATORY
+    void printPtrTree();
+
+    friend ostream& operator<<(ostream& os, TreeNode<X>& output)
+    {
+      if (output.left != NULL)
+      {
+        os << *(output.left);
+      }
+
+      if (output.key != NULL)
+      {
+        os << *(output.key) << " ";
+      }
+
+      if (output.right != NULL)
+      {
+        os << *(output.right);
+      }
+      return os;
+    };
 }
 ;
 ///////////////////////////////////////////////////////////////
@@ -63,7 +83,7 @@ void TreeNode<X>::printTree()
 
   if (key != NULL)
   {
-    cout << *key << endl;    
+    cout << *key << endl;
   }
 
   if (right != NULL)
@@ -71,3 +91,44 @@ void TreeNode<X>::printTree()
     right->printTree();
   }
 }
+
+///////////////////////////////////////////////////////////////
+template <class X>
+void TreeNode<X>::printPtrTree()
+{
+  if (left != NULL)
+  {
+    left->printPtrTree();
+  }
+
+  if (key != NULL)
+  {
+    cout << **key << endl;
+  }
+
+  if (right != NULL)
+  {
+    right->printPtrTree();
+  }
+}
+
+///////////////////////////////////////////////////////////////
+/*template <class X>
+ostream& operator<<(ostream& os, TreeNode<X>& output)
+{
+  if (output.left != NULL)
+  {
+    os << *(output.left);
+  }
+
+  if (output.key != NULL)
+  {
+    os << *(output.key) << " ";
+  }
+
+  if (output.right != NULL)
+  {
+    os << *(output.right);
+  }
+  return os;
+}*/
