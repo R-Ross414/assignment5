@@ -11,6 +11,8 @@ https://stackoverflow.com/questions/20370294/could-not-resolve-host-github-com-e
 https://www.tutorialspoint.com/cplusplus/cpp_friend_functions.htm
 http://www.austincc.edu/comer/ds11f/binaryop.htm
 https://www.youtube.com/watch?v=PgGhEovFhd0
+https://stackoverflow.com/questions/476272/how-to-properly-overload-the-operator-for-an-ostream
 
 Tutoring:
 Worked with Daniel Briseno to fix BST class
+Worked with tutor from Varsity tutors
