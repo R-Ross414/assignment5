@@ -50,7 +50,6 @@ void Database::displayStudent(int ID)
 {
   if (students->containsPtr(new Student(ID, "_", "_", "_", 0.0, 0)))
   {
-    cout << "Hello world" << endl;
     Student* student = students->searchPtr(new Student(ID, "_", "_", "_", 0.0, 0));
     cout << *student;
   }
@@ -58,7 +57,12 @@ void Database::displayStudent(int ID)
 
 void Database::displayFaculty(int ID)
 {
-
+  if (faculty->containsPtr(new Faculty(ID, "_", "_", "_", new BST<int>())))
+  {
+    Faculty* faculty = this->faculty->searchPtr(new Faculty(ID, "_", "_", "_", new BST<int>()));
+    cout << *faculty;
+    cout << endl;
+  }
 }
 
 void Database::addStudent(Student* student)

@@ -17,4 +17,5 @@ int main()
   database->addFaculty(new Faculty(44, "name", "level1", "dept", bst));
   database->addFaculty(new Faculty(22, "name", "level", "dept", bst));
   database->printFaculty();
+  database->displayFaculty(44);
 }
