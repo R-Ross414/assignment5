@@ -23,6 +23,7 @@ template<class X> class BST
     bool containsPtr(X value);
     TreeNode<X>* getSuccessor(TreeNode<X> *d); //#4
     bool deleteRec(X k); //#5
+    bool deleteRecPtr(X k);
     bool isEmpty(); //#6
 
     void printTree();
@@ -209,6 +210,22 @@ bool BST<X>::containsPtr(X value)
   {
     TreeNode<X> *current = root;
 
+    while(**(current->key) != *value)
+    {
+      if (current == NULL)
+      {
+        return false;
+      }
+      if (*value < **(current->key))
+      {
+        current = current->left;
+      }
+      else
+      {
+        current = current->right;
+      }
+    }
+    /*
     do
     {
       if (*value < **(current->key))
@@ -223,7 +240,7 @@ bool BST<X>::containsPtr(X value)
       {
         return false;
       }
-    } while(**(current->key) != *value);
+    } while(**(current->key) != *value);*/
   }
   return true;
 }
@@ -271,6 +288,94 @@ bool BST<X>::deleteRec(X k)
     parent = current;
 
     if(k < *(current->key))
+    {
+      isLeft = true;
+      current = current->left;
+    }
+    else
+    {
+      isLeft = false;
+      current = current->right;
+    }
+
+    if (current == NULL) //in the event you do not use contains
+      return false;
+  }
+
+  //at this point we found the node to be deleted
+  if(current->left == NULL && current->right == NULL)//then it's a leaf
+  {
+    if(current == root)
+    {
+      root = NULL;
+    }
+    else if (isLeft)
+    {
+      parent->left = NULL;
+    }
+    else
+    {
+      parent->right = NULL;
+    }
+  }
+
+  //check if it has one child
+  else if (current->right == NULL)//no right child, must be isLeft
+  {
+    if (current == root)
+    {
+      root = current->left;
+    }
+    else if (isLeft)
+    {
+      parent->left = current->left;
+    }
+    else //right child
+    {
+      parent->right = current->left;
+    }
+  }
+
+  else //if it has 2 children we begin to cry and take a long nap
+  {
+    TreeNode<X> *successor = getSuccessor(current);
+
+    if (current == root)
+    {
+      root = successor;
+    }
+    else if (isLeft)
+    {
+      parent->left = successor;
+    }
+    else
+    {
+      parent->right = successor;
+    }
+    successor->left = current->left;
+  }
+  return true;
+}
+
+///////////////////////////////////////////////////////////////
+template<class X>
+bool BST<X>::deleteRecPtr(X k)
+{
+  //use contains method
+  if(!containsPtr(k))
+    return false;
+
+  //lets proceed to find the TreeNode
+  TreeNode<X> *current = root;
+  TreeNode<X> *parent = root;
+  bool isLeft = true;
+
+  //lets look for the TreeNode
+  while(**(current->key) != *k)
+  {
+    parent = current;
+
+    if(*k < **(current->key))
     {
       isLeft = true;
       current = current->left;
@@ -426,12 +531,3 @@ void BST<X>::printPtrTree()
 {
   root->printPtrTree();
 }
-
-///////////////////////////
-/*
-template<class X>
-ostream& operator<<(ostream& os, BST<X>& output)
-{
-  os << *(output.root);
-  return os;
-}*/

@@ -1,12 +1,14 @@
 #include <iostream>
 #include <string>
 #include "BST.h"
+#include "DoublyLinkedList.h"
 using namespace std;
 
 class Person
 {
   public:
     Person();
+    Person(int ID);
     Person(int ID, string name, string level);
     ~Person();
 
@@ -24,6 +26,13 @@ class Person
 Person::Person()
 {
   ID = 0;
+  name = "";
+  level = "";
+}
+
+Person::Person(int ID)
+{
+  this->ID = ID;
   name = "";
   level = "";
 }
@@ -71,6 +80,14 @@ class Student : public Person
       GPA = 0.0;
       advisor = 0;
     }
+
+    Student(int ID):Person(ID)
+    {
+      major = "";
+      GPA = 0.0;
+      advisor = 0;
+    }
+
     Student(int ID, string name, string level, string major, double GPA, int advisor):Person(ID, name, level)
     {
       this->major = major;
@@ -78,6 +95,11 @@ class Student : public Person
       this->advisor = advisor;
     }
     ~Student() {}
+
+    void SetAdvisor(int advisor)
+    {
+      this->advisor = advisor;
+    }
 
     string major;
     double GPA;
@@ -96,10 +118,16 @@ class Faculty : public Person
     Faculty():Person()
     {
       dept = "";
-      advisees = new BST<int>();
+      advisees = new DoublyLinkedList<int>();
     }
 
-    Faculty(int ID, string name, string level, string dept, BST<int>* advisees):Person(ID, name, level)
+    Faculty(int ID):Person(ID)
+    {
+      dept = "";
+      advisees = NULL;
+    }
+
+    Faculty(int ID, string name, string level, string dept, DoublyLinkedList<int>* advisees):Person(ID, name, level)
     {
       this->dept = dept;
       this->advisees = advisees;
@@ -107,6 +135,20 @@ class Faculty : public Person
 
     ~Faculty() {}
 
+    void RemoveAdvisee(int studentID)
+    {
+      int idx = advisees->Idx(studentID);
+      if (idx == -1)
+      {
+        cout << "Student not found" << endl;
+      }
+      else
+      {
+        cout << *advisees << endl;
+        advisees->deletePos(studentID);
+      }
+    }
+
     string dept;
-    BST<int>* advisees;
+    DoublyLinkedList<int>* advisees;
 } ;

@@ -20,6 +20,8 @@ class Database
     void deleteStudent(int ID);//cmd 8
     void addFaculty(Faculty* faculty); //cmd 9
     void deleteFaculty(int ID); //cmd 10
+    void changeAdvisor(int studentID, int facultyID); //cmd 11
+    void removeAdvisee(int facultyID, int studentID); //cmd 12
 
     BST<Student*>* students;
     BST<Faculty*>* faculty;
@@ -58,10 +60,11 @@ void Database::printFaculty() //cmd 2
 /////////////////////////////////////////////////////////
 void Database::displayStudent(int ID) //cmd 3
 {
-  if (students->containsPtr(new Student(ID, "_", "_", "_", 0.0, 0)))
+  if (students->containsPtr(new Student(ID)))
   {
-    Student* student = students->searchPtr(new Student(ID, "_", "_", "_", 0.0, 0));
+    Student* student = students->searchPtr(new Student(ID));
     cout << *student;
+    cout << endl;
   }
   else
   {
@@ -72,9 +75,9 @@ void Database::displayStudent(int ID) //cmd 3
 /////////////////////////////////////////////////////////
 void Database::displayFaculty(int ID) //cmd 4
 {
-  if (faculty->containsPtr(new Faculty(ID, "_", "_", "_", new BST<int>(0))))
+  if (faculty->containsPtr(new Faculty(ID)))
   {
-    Faculty* faculty = this->faculty->searchPtr(new Faculty(ID, "_", "_", "_", new BST<int>(0)));
+    Faculty* faculty = this->faculty->searchPtr(new Faculty(ID));
     cout << *faculty;
     cout << endl;
   }
@@ -87,14 +90,14 @@ void Database::displayFaculty(int ID) //cmd 4
 /////////////////////////////////////////////////////////
 void Database::studentAdvisor(int ID) //cmd 5
 {
-  if (students->containsPtr(new Student(ID, "_", "_", "_", 0.0, 0)))
+  if (students->containsPtr(new Student(ID)))
   {
-    Student* student = students->searchPtr(new Student(ID, "_", "_", "_", 0.0, 0));
+    Student* student = students->searchPtr(new Student(ID));
     int advisor = student->advisor;
 
-    if (faculty->containsPtr(new Faculty(advisor, "name", "level", "dept", new BST<int>(10))))
+    if (faculty->containsPtr(new Faculty(advisor)))
     {
-      Faculty* facultyAdvisor = faculty->searchPtr(new Faculty(advisor, "_", "_", "_", new BST<int>(ID)));
+      Faculty* facultyAdvisor = faculty->searchPtr(new Faculty(advisor));
       cout << *facultyAdvisor << endl;
     }
   }
@@ -103,7 +106,21 @@ void Database::studentAdvisor(int ID) //cmd 5
 /////////////////////////////////////////////////////////
 void Database::facultyAdvisee(int ID) //cmd 6
 {
-  
+  if (faculty->containsPtr(new Faculty(ID)))
+  {
+    Faculty* faculty = this->faculty->searchPtr(new Faculty(ID));
+    for (int i = 0; i < faculty->advisees->getSize(); i++)
+    {
+      if (students->containsPtr(new Student(faculty->advisees->get(i))))
+      {
+        cout << *(students->searchPtr(new Student(faculty->advisees->get(i)))) << endl;
+      }
+    }
+  }
+  else
+  {
+    cout << "Faculty not found" << endl;
+  }
 }
 
 /////////////////////////////////////////////////////////
@@ -113,13 +130,13 @@ void Database::addStudent(Student* student) //cmd 7
 }
 
 /////////////////////////////////////////////////////////
-void Database::deleteStudent(int ID)
+void Database::deleteStudent(int ID) //cmd 8
 {
-  /*if (students->containsPtr(new Student(ID, "_", "_", "_", 0.0, 0)))
+  if (students->containsPtr(new Student(ID)))
   {
-    Student* student = students->searchPtr(new Student(ID, "_", "_", "_", 0.0, 0));
-    students->deleteRec(student);
-  }*/
+    Student* student = students->searchPtr(new Student(ID));
+    students->deleteRecPtr(student);
+  }
 }
 
 /////////////////////////////////////////////////////////
@@ -128,12 +145,38 @@ void Database::addFaculty(Faculty* faculty) //cmd 9
   this->faculty->insertPtr(faculty);
 }
 
-/////////////////////////////////////////////////////////
-void Database::deleteFaculty(int ID)
+/////////////////////////////////////////////////////////////////
+void Database::deleteFaculty(int ID) //cmd 10
 {
-  if (faculty->containsPtr(new Faculty(ID, "_", "_", "_", new BST<int>())))
+  if (faculty->containsPtr(new Faculty(ID)))
   {
-    Faculty* faculty = this->faculty->searchPtr(new Faculty(ID, "_", "_", "_", new BST<int>()));
-    this->faculty->deleteRec(faculty);
+    Faculty* faculty = this->faculty->searchPtr(new Faculty(ID));
+    this->faculty->deleteRecPtr(faculty);
   }
+}
+
+///////////////////////////////////////////////////////////////////
+void Database::changeAdvisor(int studentID, int facultyID) //cmd 11
+{
+  if (students->containsPtr(new Student(studentID)))
+  {
+    students->searchPtr(new Student(studentID))->SetAdvisor(facultyID);
+  }
+  else
+  {
+    cout << "Student not found " << endl;
+  }
+}
+
+///////////////////////////////////////////////////////////////////
+void Database::removeAdvisee(int facultyID, int studentID) //cmd 12
+{
+  /*if (faculty->containsPtr(new Faculty(facultyID)))
+  {
+    this->faculty->searchPtr(new Faculty(facultyID))->RemoveAdvisee(studentID);
+  }
+  else
+  {
+    cout << "Faculty not found" << endl;
+  }*/
 }
