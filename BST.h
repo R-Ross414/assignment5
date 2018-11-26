@@ -6,6 +6,7 @@ template<class X> class BST
 {
   public:
     BST(); //CONSTRUCTOR
+    BST(X value);
     virtual ~BST(); //DESTRUCTOR
 
     /*
@@ -17,6 +18,7 @@ template<class X> class BST
     6) checks if tree is empty */
     void deleteAll(TreeNode<X>* node); //#1
     void insert(X value); //#2
+    void insertPtr(X value);
     bool contains(X value); //#3
     bool containsPtr(X value);
     TreeNode<X>* getSuccessor(TreeNode<X> *d); //#4
@@ -51,6 +53,13 @@ BST<X>::BST()
 {
   root = NULL;
   //root = new TreeNode<X>();
+}
+
+///////////////////////////////////////////////////////////////
+template<class X>
+BST<X>::BST(X value)
+{
+  root = new TreeNode<X>(value);
 }
 
 ///////////////////////////////////////////////////////////////
@@ -114,6 +123,47 @@ void BST<X>::insert(X value)
 }
 
 ///////////////////////////////////////////////////////////////
+template<class X>
+void BST<X>::insertPtr(X value)
+{
+  //check for duplicates
+  TreeNode<X>* node = new TreeNode<X>(value);
+
+  if (isEmpty())
+  {
+    root = node;
+  }
+  else //not an empty tree, find insertion point
+  {
+    TreeNode<X> *current = root;
+    TreeNode<X> *parent; //empty tree node
+
+    while(true)
+    {
+      parent = current;
+
+      if (*value < **(current->key))
+        {
+          current = current->left;
+          if(current == NULL) //we found the insertion point
+          {
+            parent->left = node;
+            break;
+          }
+        }
+      else //go right
+        {
+          current = current->right;
+          if(current == NULL) //we found the insertion point
+          {
+            parent->right = node;
+            break;
+          }
+        }
+    }
+  }
+}
+///////////////////////////////////////////////////////////////
 //search method
 template<class X>
 bool BST<X>::contains(X value)
@@ -159,12 +209,8 @@ bool BST<X>::containsPtr(X value)
   {
     TreeNode<X> *current = root;
 
-    while(**(current->key) != *value)
+    do
     {
-      if (current == NULL)
-      {
-        return false;
-      }
       if (*value < **(current->key))
       {
         current = current->left;
@@ -173,7 +219,11 @@ bool BST<X>::containsPtr(X value)
       {
         current = current->right;
       }
-    }
+      if (current == NULL)
+      {
+        return false;
+      }
+    } while(**(current->key) != *value);
   }
   return true;
 }
