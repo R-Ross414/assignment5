@@ -111,7 +111,7 @@ class Faculty : public Person
   public:
     friend ostream& operator<<(ostream& os, Faculty& output)
     {
-      os << output.ID << " " << output.name << " " << output.level << " " << output.dept << " " << *(output.advisees);
+      os << output.ID << " " << output.name << " " << output.level << " " << output.dept << " " << output.advisees->getSize() << " " << *(output.advisees);
       return os;
     }
 

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Person.h"
-//include faculty class
+#include <fstream>
 using namespace std;
 
 class Database
@@ -9,6 +9,11 @@ class Database
     Database();
     Database(BST<Student*>* students, BST<Faculty*>* faculty);
     ~Database();
+
+    void saveStudents();
+    void loadStudents();
+    void saveFaculty();
+    void loadFaculty();
 
     void printStudents(); //cmd 1
     void printFaculty(); //cmd 2
@@ -23,8 +28,11 @@ class Database
     void changeAdvisor(int studentID, int facultyID); //cmd 11
     void removeAdvisee(int facultyID, int studentID); //cmd 12
 
+    int facultyCount;
     BST<Student*>* students;
+    BST<Student>* studentStatic;
     BST<Faculty*>* faculty;
+    BST<Faculty>* facultyStatic;
 };
 
 ///////////////////////////////////////////////////////////
@@ -33,6 +41,9 @@ Database::Database()
 {
   students = new BST<Student*>();
   faculty = new BST<Faculty*>();
+  facultyCount = 0;
+  studentStatic = new BST<Student>();
+  facultyStatic = new BST<Faculty>();
 }
 
 /////////////////////////////////////////////////////////
@@ -44,6 +55,81 @@ Database::Database(BST<Student*>* students, BST<Faculty*>* faculty)
 
 /////////////////////////////////////////////////////////
 Database::~Database() {}
+
+/////////////////////////////////////////////////////////
+void Database::saveStudents()
+{
+  ofstream output("studentTable.txt");
+  output << *studentStatic;
+  output.close();
+}
+
+/////////////////////////////////////////////////////////
+void Database::loadStudents()
+{
+  ifstream input("studentTable.txt");
+
+  int ID, advisor;
+  string name, major, level;
+  double GPA;
+
+  while (input)
+  {
+    input >> ID;
+    input >> name;
+    input >> level;
+    input >> major;
+    input >> GPA;
+    input >> advisor;
+    Student* student = new Student(ID, name, level, major, GPA, advisor);
+    addStudent(student);
+  }
+}
+/////////////////////////////////////////////////////////
+void Database::saveFaculty()
+{
+  ofstream output("facultyTable.txt");
+  output << facultyCount << endl;
+  output << *facultyStatic;
+  output.close();
+}
+
+/////////////////////////////////////////////////////////
+void Database::loadFaculty()
+{
+  ifstream input("facultyTable.txt");
+  ifstream input2("facultyTable.txt");
+
+  int ID, advisee, faculty_count;
+  int advisee_count, space_count, line_idx = 0;
+  string name, dept, level, line;
+  DoublyLinkedList<int>* advisees = new DoublyLinkedList<int>();
+
+  input >> faculty_count;
+  int line_count = 0;
+  while (input && line_count < faculty_count)
+  {
+    input >> ID;
+    input >> name;
+    input >> level;
+    input >> dept;
+    input >> advisee_count;
+    int count = 0;
+    while (count < advisee_count)
+    {
+      input >> advisee;
+      advisees->insertFront(advisee);
+      count++;
+    }
+    Faculty* faculty = new Faculty(ID, name, level, dept, advisees);
+    advisees = new DoublyLinkedList<int>();
+    space_count = 0;
+    advisee_count = 0;
+    addFaculty(faculty);
+    line_count++;
+  }
+  this->facultyCount = faculty_count;
+}
 
 /////////////////////////////////////////////////////////
 void Database::printStudents() //cmd 1
@@ -127,6 +213,7 @@ void Database::facultyAdvisee(int ID) //cmd 6
 void Database::addStudent(Student* student) //cmd 7
 {
   students->insertPtr(student);
+  studentStatic->insert(*student);
 }
 
 /////////////////////////////////////////////////////////
@@ -136,6 +223,7 @@ void Database::deleteStudent(int ID) //cmd 8
   {
     Student* student = students->searchPtr(new Student(ID));
     students->deleteRecPtr(student);
+    studentStatic->deleteRec(*student);
   }
 }
 
@@ -143,6 +231,8 @@ void Database::deleteStudent(int ID) //cmd 8
 void Database::addFaculty(Faculty* faculty) //cmd 9
 {
   this->faculty->insertPtr(faculty);
+  facultyStatic->insert(*faculty);
+  facultyCount++;
 }
 
 /////////////////////////////////////////////////////////////////
@@ -152,6 +242,8 @@ void Database::deleteFaculty(int ID) //cmd 10
   {
     Faculty* faculty = this->faculty->searchPtr(new Faculty(ID));
     this->faculty->deleteRecPtr(faculty);
+    facultyStatic->deleteRec(*faculty);
+    facultyCount--;
   }
 }
 
