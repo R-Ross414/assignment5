@@ -18,4 +18,4 @@ Worked with Daniel Briseno to fix BST class
 Worked with tutor from Varsity tutors
 
 Comments:
-I finished as much as I could but could not complete all of the commands or do as much testing with file IO as I wanted to. 
+I finished as much as I could but could not complete all of the commands or do as much testing with file IO as I wanted to. The comments give some indication of what I attempted but it took longer than expected to override operators, etc.
